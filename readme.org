@@ -1,0 +1,8 @@
+Estudio del clan comportamiento usando Python
+
+En esta plática se define el operador de clanes de una gráfica no
+dirigida y se estudia el problema del clan comportamiento en gráficas
+finitas por medio de computadora usando una biblioteca desarrollada en
+el lenguage de programación Python.
+
+
