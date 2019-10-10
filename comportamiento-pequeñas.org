@@ -5,6 +5,8 @@
 #+date: 11 de octubre de 2019
 #+setupfile: options.org
 
+#+latex_header: \usepackage{fontawesome}
+
 #+latex: \setbeamercolor{alerted text}{fg=teal}
 #+latex: \setsansfont[BoldFont={Fira Sans SemiBold}]{Fira Sans Book}
 
@@ -271,7 +273,6 @@
   \end{scope}
   \pause
   % hidden faces
-  \myedge{Level1}{\edwidth}
   \grComplete[RA=2,prefix=a,rotation=\rota]{5}
   \pause
   \begin{scope}[yshift=3.5cm]
@@ -283,7 +284,6 @@
   % the hidden parallel edge
   \Edge(a3)(b3)
   % visible faces
-  \myedge{Level2}{\edwidth}
   \edgefaces{0}{4}
   \edgefaces{0}{1}
   \edgefaces{1}{2}
@@ -610,7 +610,7 @@
      #+header: :file (by-backend (latex "suspensiones.tikz") (beamer "suspensiones.tikz") (t "suspensiones.png"))
      #+begin_src latex
 \bigskip
-\begin{tikzpicture}[scale=1.2]
+\begin{tikzpicture}[scale=1.5]
   \setxyzvec[20]
   \grEmptyCycle[RA=1,prefix=y,rotation=10]{6}
   \begin{scope}[yshift=1.4cm]
@@ -630,7 +630,7 @@
    
      #+attr_html: :width 400 :alt suspensiones :align center
      #+attr_latex: :float t :width ""
-     #+RESULTS[45547021c34825f2dbe279e670412b6f0e3af5cb]: suspensiones
+     #+RESULTS[8c54688637c2b49606e64a51c550637c799a95f8]: suspensiones
      [[file:suspensiones.png]]
 
 ** 
@@ -656,6 +656,787 @@
      [[file:complementos-de-ciclos.png]]
   
 
+* Gráficas pequeñas
+
+** Página de McKay
+
+   En la [[http://cs.anu.edu.au/~bdm/data/graphs.html][página de internet]] de Brendan McKay hay archivos donde se
+   pueden descargar archivos con gráficas conexas pequeñas.
+ 
+   | \(n\) | # gráficas conexas con \(n\) vértices |
+   |-------+---------------------------------------|
+   |     6 |                                   112 |
+   |     7 |                                   853 |
+   |     8 |                                 11117 |
+   |     9 |                                261080 |
+   |-------+---------------------------------------|
+   | Total |                                273162 |
+ 
+** 
+
+   Para cada gráfica conexa de orden entre 6 y 9 calculamos:
+
+   - Si tiene vértices dominados.
+   - Si no, entonces vemos si alguna iterada es Helly.
+     - Por cuestiones prácticas, solo iteramos 8 veces, y si alguna
+       iterada pasa de 30 vértices, la dejamos.
+   - Si se retrae especialmente a algún octaedro.
+   - Si se retrae a la suspensón de \(C_{5}\), a la suspensión de
+     \(C_{6}\), o al complemento de \(C_{8}\).
+   - Si alguna iterada de clanes se retrae especialmente a algún
+     octaedro. 
+     - Por cuestiones prácticas, solo iteramos 8 veces, y si alguna
+       iterada pasa de 20 vértices, la dejamos.
+   - Si no satisface ninguna de las anteriores, la estudiaremos aparte.
+   
+** Resultados
+
+   - Todas las gráficas de hasta 7 vértices tienen comportamiento conocido.
+   - La única gráfica de 8 vértices que tiene comportamiento
+     desconocido es una triangulación de la esfera, a saber, el
+     *disfenoide chato* (snub dysphenoid).
+
+*** chato 1                                                  :B_column:BMCOL:
+    :PROPERTIES:
+    :BEAMER_env: column
+    :BEAMER_col: 0.5
+    :END:
+
+     #+name: disfenoide-chato
+     #+header: :file (by-backend (latex "disfenoide-chato.tikz") (beamer "disfenoide-chato.tikz") (t "disfenoide-chato.png"))
+     #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grPath[form=2, RA=1.2, rotation=90, prefix=a]{4}
+  \grPath[form=2, RA=1.2, prefix=b]{4}
+  \EdgeFromOneToAll{b}{a}{3}{4}
+  \EdgeFromOneToAll{b}{a}{0}{4}
+  \EdgeFromOneToAll{a}{b}{3}{4}
+  \EdgeFromOneToAll{a}{b}{0}{4}
+\end{tikzpicture}
+     #+end_src
+     
+     #+attr_html: :width 400 :alt disfenoide-chato :align center
+     #+attr_latex: :float t :width ""
+     #+RESULTS[116bf51be7cf0f24b74c30b5f25dbf240fa2417e]: disfenoide-chato
+     [[file:disfenoide-chato.png]]
+
+*** chato 2                                                  :B_column:BMCOL:
+    :PROPERTIES:
+    :BEAMER_env: column
+    :BEAMER_col: 0.5
+    :END:
+    #+name: chato-3d
+    #+header: :file (by-backend (latex "chato-3d.tikz") (beamer "chato-3d.tikz") (t "chato-3d.png"))
+    #+begin_src latex
+    \setxyzvec[25]
+    \newcommand{\rot}{30}
+    \newcommand{\leng}{5}
+    \newcommand{\factor}{2}
+    \begin{tikzpicture}%
+      [x = {(\xone cm,\yone cm)}, y = {(\xtwo cm,\ytwo cm)}, z =
+      {(0cm,1cm)}, scale=0.35]
+      \grEmptyPath[prefix=a,form=2,RA=\leng,rotation=\rot]{2}
+      \begin{scope}[canvas is xy plane at z={\factor*sqrt(2)}]
+        \grEmptyPath[prefix=b,form=2,RA=\leng,rotation=90+\rot]{2}
+      \end{scope}
+      \begin{scope}[canvas is xy plane at z={2*\factor*sqrt(2)}]
+        \grEmptyPath[prefix=c,form=2,RA=\leng,rotation=\rot]{2}
+      \end{scope}
+      \begin{scope}[canvas is xy plane at z={3*\factor*sqrt(2)}]
+        \grPath[prefix=d,form=2,RA=\leng,rotation=90+\rot]{2}
+      \end{scope}
+      {\tikzstyle{EdgeStyle}= [color=white,line width=1pt,double=black,double distance=1pt]
+        \Edge(a0)(c0)
+        \Edge(a0)(a1)
+        \EdgeFromOneToAll{a}{b}{0}{2}
+        \EdgeFromOneToAll{c}{d}{0}{2}
+        \EdgeFromOneToAll{c}{b}{0}{2}
+      }
+      \EdgeFromOneToAll{a}{b}{1}{2}
+      \EdgeFromOneToAll{c}{b}{1}{2}
+      \Edge(b0)(d0)
+      \Edge(b1)(d1)
+      \Edge(a1)(c1)
+      \EdgeFromOneToAll{c}{d}{1}{2}
+      \begin{scope}[canvas is xy plane at z={4*sqrt(2)}]
+        \grEmptyPath[prefix=c,form=2,RA=\leng,rotation=\rot]{2}
+      \end{scope}
+      \begin{scope}[canvas is xy plane at z={3*\factor*sqrt(2)}]
+        \grPath[prefix=d,form=2,RA=\leng,rotation=90+\rot]{2}
+      \end{scope}
+    \end{tikzpicture}
+    #+end_src
+    
+    #+attr_html: :width 400 :alt chato-3d :align center
+    #+attr_latex: :float t :width ""
+    #+RESULTS[91f5703155b840a874c76f1e4b44f208a2ef9dd5]: chato-3d
+    [[file:chato-3d.png]]
+
+
+
+** El disfenoide chato
+
+   Se puede hacer una transformación sencilla iniciando en el
+   disfenoide chato y terminando en la suspensión de \(C_{6}\).
+  
+***                                                          :B_column:BMCOL:
+    :PROPERTIES:
+    :BEAMER_env: column
+    :BEAMER_col: 0.5
+    :END:
+    #+name: otro-chato
+    #+header: :file (by-backend (latex "otro-chato.tikz") (beamer "otro-chato.tikz") (t "otro-chato.png"))
+    #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grPath[form=2, RA=1.6, rotation=90, prefix=a]{4}
+  \grPath[form=2, RA=1.6, prefix=b]{4}
+  \EdgeFromOneToAll{b}{a}{3}{4}
+  \EdgeFromOneToAll{b}{a}{0}{4}
+  \EdgeFromOneToAll{a}{b}{3}{4}
+  \EdgeFromOneToAll{a}{b}{0}{4}
+\end{tikzpicture}
+    #+end_src
+    
+    #+attr_html: :width 400 :alt otro-chato :align center
+    #+attr_latex: :float t :width ""
+    #+RESULTS[9ea91dd08a3a40909511c699d73ae850542f6750]: otro-chato
+    [[file:otro-chato.png]]
+
+    
+***                                                          :B_column:BMCOL:
+    :PROPERTIES:
+    :BEAMER_env: column
+    :BEAMER_col: 0.5
+    :END:
+    #+name: suspension-a-chato
+    #+header: :file (by-backend (latex "suspension-a-chato.tikz") (beamer "suspension-a-chato.tikz") (t "suspension-a-chato.png"))
+    #+begin_src latex
+\begin{tikzpicture}
+  \newcommand{\rad}{1.6}
+  \newcommand{\factor}{1.2}
+  \uncover<3>{%
+  \grPath[form=2, RA=\rad, rotation=90, prefix=a]{4}
+  \Vertex[x=-1.5*\rad, y=0]{b0}
+  \Vertex[x=1.5*\rad, y=0]{b3}
+  \EdgeFromOneToAll{b}{a}{3}{4}
+  \EdgeFromOneToAll{b}{a}{0}{4}}
+  \uncover<4>{%
+  \grPath[form=2, RA=\rad, prefix=a]{4}
+  \Vertex[x=0, y=-1.5*\rad]{b0}
+  \Vertex[x=0, y=1.5*\rad]{b3}
+  \EdgeFromOneToAll{b}{a}{3}{4}
+  \EdgeFromOneToAll{b}{a}{0}{4}}
+  \uncover<5->{\setxyzvec[5]
+  \grEmptyCycle[RA=1.5*\factor,prefix=y,rotation=10]{6}
+  \begin{scope}[yshift=2.1*\factor cm]
+    \Vertex{x}
+  \end{scope}
+  \begin{scope}[yshift=-2.1*\factor cm]
+    \Vertex{z}
+  \end{scope}
+  \EdgeFromOneToAll{z}{y}{}{6}
+  \Edges(y0,y1,y2,y3,y4,y5,y0)
+  \EdgeFromOneToAll{x}{y}{}{6}
+  \grCycle[RA=1.5*\factor,prefix=y,rotation=10]{6}
+  \Edge(y0)(x)
+  \Edge(y1)(x)}
+\end{tikzpicture}
+    #+end_src
+    
+    #+attr_html: :width 400 :alt suspension-a-chato :align center
+    #+attr_latex: :float t :width ""
+    #+RESULTS[217727db697cd55c4008f792d8ec094c88c03c65]: suspension-a-chato
+    [[file:suspension-a-chato.png]]
+
+
+** Iteradas del chato
+
+   - Los órdenes de las primeras iteradas de clanes del disfenoide
+     chato \(D\) son:
+
+     | \(n\) | orden de $K^{n}(D)$ |
+     |-------+---------------------|
+     |     0 |                   8 |
+     |     1 |                  12 |
+     |     2 |                  20 |
+     |     3 |                  56 |
+     |     4 |                1076 |
+     |     5 |    $>7,370,000,000$ |
+
+
+* Gráficas con 9 vértices de carácter desconocido
+
+** 
+
+   - Supongamos que el disfenoide chato es divergente. Entonces
+     quedarían todavía 18 gráficas de 9 vértices con carácter
+     desconocido.
+   - Hay exactamente 2 que son triangulaciones de la esfera.
+   - Todas las gráficas de 9 vértices con comportamiento desconocido
+     restantes, menos una, se obtienen de forma sencilla a partir de las
+     tres triangulaciones de la esfera mencionadas anteriormente.
+
+
+** 208409
+
+   - La primera es la que en la lista de gráficas conexas de McKay
+     (indexadas iniciando en 0) es la 208409.
+   - Los órdenes de las primeras iteradas de clanes son: 9,
+     14, 21, 60, 1180.
+
+     #+name: 208409
+     #+header: :file (by-backend (latex "208409.tikz") (beamer "208409.tikz") (t "208409.png"))
+     #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grPath[form=2, RA=1.6, rotation=90, x=0.4, prefix=a]{4}
+  \grPath[form=2, RA=1.6, prefix=b]{5}
+  \EdgeFromOneToAll{b}{a}{4}{4}
+  \EdgeFromOneToAll{b}{a}{0}{4}
+  \EdgeFromOneToAll{a}{b}{3}{5}
+  \EdgeFromOneToAll{a}{b}{0}{5}
+\end{tikzpicture}
+     #+end_src
+     
+     #+attr_html: :width 400 :alt 208409 :align center
+     #+attr_latex: :float t :width ""
+     #+RESULTS[8c2b0eaeab7593c0c3f71192f96c1f510f57d64e]: 208409
+     [[file:208409.png]]
+  
+
+** 248687
+
+   La otra triangulación de la esfera se puede obtener identificando
+   las siguientes dos gráficas a lo largo del ciclo de 6 vértices. Los
+   órdenes de las iteradas de clanes son: 9, 14, 23, 56, 452
+
+   #+name: 248687
+   #+header: :file (by-backend (latex "248687.tikz") (beamer "248687.tikz") (t "248687.png"))
+   #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grWheel[RA=2, prefix=a]{7}
+  \grCycle[x=5, RA=2, prefix=b]{6}
+  \grPath[x=5, RA=1.3333, form=2, rotation=90, prefix=c]{2}
+  \EdgeFromOneToSel{c}{b}{0}{0,3,4,5}
+  \EdgeFromOneToSel{c}{b}{1}{0,1,2,3}
+\end{tikzpicture}
+   #+end_src
+   
+   #+attr_html: :width 400 :alt 248687 :align center
+   #+attr_latex: :float t :width ""
+   #+RESULTS[3d14550440106791539962b44c6cd194d15f6343]: 248687
+   [[file:248687.png]]
+
+** 242316
+
+   Órdenes de las iteradas: 9, 14, 21, 60, 1180
+
+   #+name: 242316
+   #+header: :file (by-backend (latex "242316.tikz") (beamer "242316.tikz") (t "242316.png"))
+   #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grPath[form=2, RA=1.8, rotation=90, prefix=a]{4}
+  \grPath[form=2, RA=1.8, prefix=b]{4}
+  \EdgeFromOneToAll{b}{a}{3}{4}
+  \EdgeFromOneToAll{b}{a}{0}{4}
+i  \EdgeFromOneToAll{a}{b}{3}{4}
+  \EdgeFromOneToAll{a}{b}{0}{4}
+  \Vertex[x=-2.7, y=2.7]{x}
+  \tikzstyle{EdgeStyle}=[color=red, line width=0.5pt, double=red, double distance=1pt]
+  \EdgeFromOneToSel{x}{a}{}{0,2}
+  \EdgeFromOneToSel{x}{b}{}{1,3}
+\end{tikzpicture}
+   #+end_src
+   
+   #+attr_html: :width 400 :alt 242316 :align center
+   #+attr_latex: :float t :width ""
+   #+RESULTS[6c0ebda9f4b016a3ef86ee3d14c7aa9db50b64d1]: 242316
+   [[file:242316.png]]
+
+
+
+** 248936
+
+   9, 13, 19, 37, 182.
+
+   #+name: 248936
+   #+header: :file (by-backend (latex "248936.tikz") (beamer "248936.tikz") (t "248936.png"))
+   #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grPath[form=2, RA=1.6, rotation=90, x=0.4, prefix=a]{4}
+  \grPath[form=2, RA=1.6, prefix=b]{5}
+  \EdgeFromOneToAll{b}{a}{4}{4}
+  \EdgeFromOneToAll{b}{a}{0}{4}
+  \EdgeFromOneToAll{a}{b}{3}{5}
+  \EdgeFromOneToAll{a}{b}{0}{5}
+  \tikzstyle{EdgeStyle}=[color=red, line width=0.5pt, double=red, double distance=1pt]
+  \Edge(b1)(a1)
+\end{tikzpicture}
+   #+end_src
+   
+   #+attr_html: :width 400 :alt 248936 :align center
+   #+attr_latex: :float t :width ""
+   #+RESULTS[4139933e13567eb8e6a1e1262ef2337464283dc6]: 248936
+   [[file:248936.png]]
+
+** 249436
+
+   9, 15, 23, 52, 353.
+
+   #+name: 249436
+   #+header: :file (by-backend (latex "249436.tikz") (beamer "249436.tikz") (t "249436.png"))
+   #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grPath[form=2, RA=1.6, rotation=90, x=0.4, prefix=a]{4}
+  \grPath[form=2, RA=1.6, prefix=b]{5}
+  \EdgeFromOneToAll{b}{a}{4}{4}
+  \EdgeFromOneToAll{b}{a}{0}{4}
+  \EdgeFromOneToAll{a}{b}{3}{5}
+  \EdgeFromOneToAll{a}{b}{0}{5}
+  \tikzstyle{EdgeStyle}=[color=red, line width=0.5pt, double=red, double distance=1pt]
+  \Edge(b2)(a1)
+\end{tikzpicture}
+   #+end_src
+   
+   #+attr_html: :width 400 :alt 249436 :align center
+   #+attr_latex: :float t :width ""
+   #+RESULTS[6ed9d4477da6f144a4cee23c6e96693186d9c521]: 249436
+   [[file:249436.png]]
+
+** 249574
+
+   9, 12, 17, 36, 306
+
+   #+name: 249574
+   #+header: :file (by-backend (latex "249574.tikz") (beamer "249574.tikz") (t "249574.png"))
+   #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grPath[form=2, RA=1.6, rotation=90, x=0.4, prefix=a]{4}
+  \grPath[form=2, RA=1.6, prefix=b]{5}
+  \EdgeFromOneToAll{b}{a}{4}{4}
+  \EdgeFromOneToAll{b}{a}{0}{4}
+  \EdgeFromOneToAll{a}{b}{3}{5}
+  \EdgeFromOneToAll{a}{b}{0}{5}
+  \tikzstyle{EdgeStyle}=[color=red, line width=0.5pt, double=red, double distance=1pt]
+  \Edge(b1)(a1)
+  \Edge(b3)(a1)
+\end{tikzpicture}
+   #+end_src
+   
+   #+attr_html: :width 400 :alt 249574 :align center
+   #+attr_latex: :float t :width ""
+   #+RESULTS[08462fe837c5a8cf512cdca3522ed586a21ad16e]: 249574
+   [[file:249574.png]]
+
+** 249576
+
+   9, 13, 22, 53, 685.
+
+   #+name: 249576
+   #+header: :file (by-backend (latex "249576.tikz") (beamer "249576.tikz") (t "249576.png"))
+   #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grPath[form=2, RA=1.6, rotation=90, x=0.4, prefix=a]{4}
+  \grPath[form=2, RA=1.6, prefix=b]{5}
+  \EdgeFromOneToAll{b}{a}{4}{4}
+  \EdgeFromOneToAll{b}{a}{0}{4}
+  \EdgeFromOneToAll{a}{b}{3}{5}
+  \EdgeFromOneToAll{a}{b}{0}{5}
+  \tikzstyle{EdgeStyle}=[color=red, line width=0.5pt, double=red, double distance=1pt]
+  \Edge(b1)(a1)
+  \Edge(b2)(a1)
+\end{tikzpicture}
+   #+end_src
+   
+   #+attr_html: :width 400 :alt 249576 :align center
+   #+attr_latex: :float t :width ""
+   #+RESULTS[86f1a5ecd772e05fa5484d3c2a2b0ac215c52524]: 249576
+   [[file:249576.png]]
+
+** 250814
+
+   9, 12, 18, 38, 222.
+
+   #+name: 250814
+   #+header: :file (by-backend (latex "250814.tikz") (beamer "250814.tikz") (t "250814.png"))
+   #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grWheel[RA=2, prefix=a]{7}
+  \grCycle[x=5, RA=2, prefix=b]{6}
+  \grPath[x=5, RA=1.3333, form=2, rotation=90, prefix=c]{2}
+  \EdgeFromOneToSel{c}{b}{0}{0,3,4,5}
+  \EdgeFromOneToSel{c}{b}{1}{0,1,2,3}
+  \tikzstyle{EdgeStyle}=[color=red, line width=0.5pt, double=red, double distance=1pt]
+  \Edge(c0)(b2)
+  \Edge(b1)(b5)
+  \Edge(a1)(a5)
+\end{tikzpicture}
+   #+end_src
+   
+   #+attr_html: :width 400 :alt 250814 :align center
+   #+attr_latex: :float t :width ""
+   #+RESULTS[32d5ef989e982b8f4ed00f5ac237c7d1cda8be3c]: 250814
+   [[file:250814.png]]
+
+** 251628
+
+   9, 13, 20, 55, 1034.
+
+   #+name: 251628
+   #+header: :file (by-backend (latex "251628.tikz") (beamer "251628.tikz") (t "251628.png"))
+   #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grPath[form=2, RA=1.8, rotation=90, prefix=a]{4}
+  \grPath[form=2, RA=1.8, prefix=b]{4}
+  \EdgeFromOneToAll{b}{a}{3}{4}
+  \EdgeFromOneToAll{b}{a}{0}{4}
+  \EdgeFromOneToAll{a}{b}{3}{4}
+  \EdgeFromOneToAll{a}{b}{0}{4}
+  \Vertex[x=-2.7, y=2.7]{x}
+  \tikzstyle{EdgeStyle}=[color=red, line width=0.5pt, double=red, double distance=1pt]
+  \EdgeFromOneToSel{x}{a}{}{0, 2, 3}
+  \EdgeFromOneToSel{x}{b}{}{1, 2}
+\end{tikzpicture}
+   #+end_src
+   
+   #+attr_html: :width 400 :alt 251628 :align center
+   #+attr_latex: :float t :width ""
+   #+RESULTS[d691e3ff13167cba4ede8796560cc8df8d371d11]: 251628
+   [[file:251628.png]]
+
+
+   
+** 251759
+
+   9, 13, 21, 43, 403.
+
+   #+name: 251759
+   #+header: :file (by-backend (latex "251759.tikz") (beamer "251759.tikz") (t "251759.png"))
+   #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grWheel[RA=2, prefix=a]{7}
+  \grCycle[x=5, RA=2, prefix=b]{6}
+  \grPath[x=5, RA=1.3333, form=2, rotation=90, prefix=c]{2}
+  \EdgeFromOneToSel{c}{b}{0}{0,3,4,5}
+  \EdgeFromOneToSel{c}{b}{1}{0,1,2,3}
+  \tikzstyle{EdgeStyle}=[color=red, line width=0.5pt, double=red, double distance=1pt]
+  \Edge[style={bend right}](b1)(b4)
+  \Edge(b1)(b5)
+  \Edge[style={bend right}](a1)(a4)
+  \Edge(a1)(a5)
+\end{tikzpicture}
+   #+end_src
+   
+   #+attr_html: :width 400 :alt 251759 :align center
+   #+attr_latex: :float t :width ""
+   #+RESULTS[b3d5055ea53b2befc839b19ca7c5e1cfcb53748b]: 251759
+   [[file:251759.png]]
+
+
+** 251902
+
+   9, 12, 18, 41, 461.
+
+   #+name: 251902
+   #+header: :file (by-backend (latex "251902.tikz") (beamer "251902.tikz") (t "251902.png"))
+   #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grWheel[RA=2, prefix=a]{7}
+  \grCycle[x=5, RA=2, prefix=b]{6}
+  \grPath[x=5, RA=1.3333, form=2, rotation=90, prefix=c]{2}
+  \EdgeFromOneToSel{c}{b}{0}{0,3,4,5}
+  \EdgeFromOneToSel{c}{b}{1}{0,1,2,3}
+  \tikzstyle{EdgeStyle}=[color=red, line width=0.5pt, double=red, double distance=1pt]
+  \Edge[style={bend right}](b1)(b4)
+  \Edge(b1)(b5)
+  \Edge[style={bend right}](a1)(a4)
+  \Edge(a1)(a5)
+  \Edge(b2)(c0)
+\end{tikzpicture}
+   #+end_src
+   
+   #+attr_html: :width 400 :alt 251902 :align center
+   #+attr_latex: :float t :width ""
+   #+RESULTS[e9f205310c171b9ba65955d134d62ddbc10ff87d]: 251902
+   [[file:251902.png]]
+
+
+** 252075
+
+   9, 13, 20, 55, 1076.
+
+   
+***                                                          :B_column:BMCOL:
+    :PROPERTIES:
+    :BEAMER_env: column
+    :BEAMER_col: 0.5
+    :END:
+    #+name: 252075a
+    #+header: :file (by-backend (latex "252075a.tikz") (beamer "252075a.tikz") (t "252075a.png"))
+    #+begin_src latex
+\bigskip
+\begin{tikzpicture}[scale=0.6]
+  \grWheel[RA=2, prefix=a]{7}
+  \grCycle[x=5, RA=2, prefix=b]{6}
+  \grPath[x=5, RA=1.3333, form=2, rotation=90, prefix=c]{2}
+  \EdgeFromOneToSel{c}{b}{0}{0,3,4,5}
+  \EdgeFromOneToSel{c}{b}{1}{0,1,2,3}
+  \tikzstyle{EdgeStyle}=[color=red, line width=0.5pt, double=red, double distance=1pt]
+  \Edge[style={bend right}](b1)(b4)
+  \Edge[style={bend right}](a1)(a4)
+  \Edge[style={bend right}](a3)(a5)
+  \Edge[style={bend right}](b3)(b5)
+\end{tikzpicture}
+    #+end_src
+    
+    #+attr_html: :width 400 :alt 252075a :align center
+    #+attr_latex: :float t :width ""
+    #+RESULTS[9d1bd845363d0c5b94064de43134bc9bdc60fb88]: 252075a
+    [[file:252075a.png]]
+
+***                                                          :B_column:BMCOL:
+    :PROPERTIES:
+    :BEAMER_env: column
+    :BEAMER_col: 0.5
+    :END:
+    #+name: 252075b
+    #+header: :file (by-backend (latex "252075b.tikz") (beamer "252075b.tikz") (t "252075b.png"))
+    #+begin_src latex
+\bigskip
+\begin{tikzpicture}[scale=0.6]
+  \grPath[form=2, RA=1.8, rotation=90, prefix=a]{4}
+  \grPath[form=2, RA=1.8, prefix=b]{4}
+  \EdgeFromOneToAll{b}{a}{3}{4}
+  \EdgeFromOneToAll{b}{a}{0}{4}
+  \EdgeFromOneToAll{a}{b}{3}{4}
+  \EdgeFromOneToAll{a}{b}{0}{4}
+  \Vertex[x=-2.7, y=2.7]{x}
+  \tikzstyle{EdgeStyle}=[color=red, line width=0.5pt, double=red, double distance=1pt]
+  \EdgeFromOneToSel{x}{a}{}{1, 2, 3}
+  \EdgeFromOneToSel{x}{b}{}{1, 3}
+\end{tikzpicture}
+    #+end_src
+    
+    #+attr_html: :width 400 :alt 252075b :align center
+    #+attr_latex: :float t :width ""
+    #+RESULTS[f7f6df603bebc0640ba79ff4548450e9a0b0694d]: 252075b
+    [[file:252075b.png]]
+
+** 253650
+
+   9, 14, 19, 40, 259.
+
+   #+name: 253650
+   #+header: :file (by-backend (latex "253650.tikz") (beamer "253650.tikz") (t "253650.png"))
+   #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grWheel[RA=2, prefix=a]{7}
+  \grCycle[x=5, RA=2, prefix=b]{6}
+  \grPath[x=5, RA=1.3333, form=2, rotation=90, prefix=c]{2}
+  \EdgeFromOneToSel{c}{b}{0}{0,3,4,5}
+  \EdgeFromOneToSel{c}{b}{1}{0,1,2,3}
+  \tikzstyle{EdgeStyle}=[color=red, line width=0.5pt, double=red, double distance=1pt]
+  \Edge[style={bend right}](a2)(a5)
+  \Edge[style={bend right}](b2)(b5)
+  \Edge(b1)(c0)
+\end{tikzpicture}
+   #+end_src
+   
+   #+attr_html: :width 400 :alt 253650 :align center
+   #+attr_latex: :float t :width ""
+   #+RESULTS[abd3644db6307cc548a41b877ad9d2406050af39]: 253650
+   [[file:253650.png]]
+
+** 254369
+
+   9, 13, 17, 40, 394.
+
+   #+name: 254369
+   #+header: :file (by-backend (latex "254369.tikz") (beamer "254369.tikz") (t "254369.png"))
+   #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grPath[form=2, RA=1.6, rotation=90, x=0.4, prefix=a]{4}
+  \grPath[form=2, RA=1.6, prefix=b]{5}
+  \EdgeFromOneToAll{b}{a}{4}{4}
+  \EdgeFromOneToAll{b}{a}{0}{4}
+  \EdgeFromOneToAll{a}{b}{3}{5}
+  \EdgeFromOneToAll{a}{b}{0}{5}
+  \tikzstyle{EdgeStyle}=[color=red, line width=0.5pt, double=red, double distance=1pt]
+  \Edge(b1)(a1)
+  \Edge(b3)(a1)
+  \Edge(b2)(a2)
+\end{tikzpicture}
+   #+end_src
+   
+   #+attr_html: :width 400 :alt 254369 :align center
+   #+attr_latex: :float t :width ""
+   #+RESULTS[b23ef751f640ebf8967ca2dcc6daaf15a335924d]: 254369
+   [[file:254369.png]]
+
+** 260040
+
+   9, 13, 21, 58, 1227.
+
+   #+name: 260040
+   #+header: :file (by-backend (latex "260040.tikz") (beamer "260040.tikz") (t "260040.png"))
+   #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grPath[form=2, RA=1.8, rotation=90, prefix=a]{4}
+  \grPath[form=2, RA=1.8, prefix=b]{4}
+  \EdgeFromOneToAll{b}{a}{3}{4}
+  \EdgeFromOneToAll{b}{a}{0}{4}
+  \EdgeFromOneToAll{a}{b}{3}{4}
+  \EdgeFromOneToAll{a}{b}{0}{4}
+  \Vertex[x=-2.7, y=2.7]{x}
+  \tikzstyle{EdgeStyle}=[color=red, line width=0.5pt, double=red, double distance=1pt]
+  \EdgeFromOneToSel{x}{a}{}{1, 2}
+  \EdgeFromOneToSel{x}{b}{}{0, 1, 2}
+\end{tikzpicture}
+   #+end_src
+   
+   #+attr_html: :width 400 :alt 260040 :align center
+   #+attr_latex: :float t :width ""
+   #+RESULTS[735fcbbb3a6cd2438d7d572496e6a5bf11bafd0b]: 260040
+   [[file:260040.png]]
+
+** 260910
+
+   9, 12, 21, 132.
+
+   #+name: 260910
+   #+header: :file (by-backend (latex "260910.tikz") (beamer "260910.tikz") (t "260910.png"))
+   #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grPath[form=2, RA=1.8, rotation=90, prefix=a]{4}
+  \grPath[form=2, RA=1.8, prefix=b]{4}
+  \EdgeFromOneToAll{b}{a}{3}{4}
+  \EdgeFromOneToAll{b}{a}{0}{4}
+  \EdgeFromOneToAll{a}{b}{3}{4}
+  \EdgeFromOneToAll{a}{b}{0}{4}
+  \Vertex[x=-2.7, y=2.7]{x}
+  \tikzstyle{EdgeStyle}=[color=red, line width=0.5pt, double=red, double distance=1pt]
+  \EdgeFromOneToSel{x}{a}{}{0, 3}
+  \EdgeFromOneToSel{x}{b}{}{0, 1, 2, 3}
+  \Edge(a2)(b2)
+  \Edge(a2)(b1)
+\end{tikzpicture}
+   #+end_src
+   
+   #+attr_html: :width 400 :alt 260910 :align center
+   #+attr_latex: :float t :width ""
+   #+RESULTS[89a8fe8cf7127f0745beda4c0721948ea9f267cc]: 260910
+   [[file:260910.png]]
+
+** Finalmente, 250693
+
+*** 250684                                                   :B_column:BMCOL:
+    :PROPERTIES:
+    :BEAMER_env: column
+    :BEAMER_col: 0.5
+    :END:
+
+    La tercera iterada de clanes de la 250684 tiene orden 62 y se
+    retrae especialmente a un octaedro.
+
+    #+name: prisma-triangular-estrellado
+    #+header: :file (by-backend (latex "prisma-triangular-estrellado.tikz") (beamer "prisma-triangular-estrellado.tikz") (t "prisma-triangular-estrellado.png"))
+    #+begin_src latex
+\setxyzvec[18]
+\begin{tikzpicture}%
+  [x = {(\xone cm,\yone cm)}, y = {(\xtwo cm,\ytwo cm)}, z =
+  {(0cm,1cm)}, scale=0.8]
+  \uncover<3->{\begin{scope}[xyplane=4]
+    \grCycle[RA=2, prefix=a]{3}
+  \end{scope}
+  \grCycle[RA=2, prefix=b]{3}
+  \EdgeIdentity{a}{b}{3}}
+  \uncover<4->{\begin{scope}[xyplane=2]
+    \grEmptyCycle[RA=2.5, rotation=60, prefix=g]{3}
+  \end{scope}
+  \EdgeIdentity{g}{a}{3}
+  \EdgeIdentity{g}{b}{3}
+  \EdgeMod{g}{a}{3}{1}
+  \EdgeMod{g}{b}{3}{1}
+  \Edge(a1)(b1)
+  \Edge(g0)(a0)
+  \Edge(g0)(a1)
+  \Edge(a0)(a1)}
+\end{tikzpicture}
+    #+end_src
+    
+    #+attr_html: :width 400 :alt prisma-triangular-estrellado :align center
+    #+attr_latex: :float t :width ""
+    #+RESULTS[1b026edeb2849626a9e398eab34f4bf80b8367e0]: prisma-triangular-estrellado
+    [[file:prisma-triangular-estrellado.png]]
+
+
+#+beamer: \pause
+#+beamer: \pause
+
+*** 250693                                                   :B_column:BMCOL:
+    :PROPERTIES:
+    :BEAMER_env: column
+    :BEAMER_col: 0.5
+    :END:
+
+    Las primeras iteradas de la 250693 tienen órdenes 9, 13, 19, 41,
+    241, y se desconoce su comportamiento.
+
+    #+name: 250693
+    #+header: :file (by-backend (latex "250693.tikz") (beamer "250693.tikz") (t "250693.png"))
+    #+begin_src latex
+\setxyzvec[18]
+\begin{tikzpicture}%
+  [x = {(\xone cm,\yone cm)}, y = {(\xtwo cm,\ytwo cm)}, z =
+  {(0cm,1cm)}, scale=0.8]
+  \uncover<5->{\begin{scope}[xyplane=4]
+    \grCycle[RA=2, prefix=a]{3}
+  \end{scope}
+  \grCycle[RA=2, prefix=b]{3}
+  \EdgeIdentity{a}{b}{3}}
+  \uncover<5->{\begin{scope}[xyplane=2]
+    \grEmptyCycle[RA=2.5, rotation=60, prefix=g]{3}
+  \end{scope}
+  \EdgeIdentity{g}{a}{3}
+  \EdgeIdentity{g}{b}{3}
+  \EdgeMod{g}{a}{3}{1}
+  \EdgeMod{g}{b}{3}{1}
+  \Edge(a1)(b1)
+  \Edge(g0)(a0)
+  \Edge(g0)(a1)
+  \Edge(a0)(a1)
+  \tikzstyle{EdgeStyle}=[color=red, line width=0.5pt, double=red, double distance=1pt]
+  \Edge(g0)(b2)}
+\end{tikzpicture}
+    #+end_src
+    
+    #+attr_html: :width 400 :alt 250693 :align center
+    #+attr_latex: :float t :width ""
+    #+RESULTS[d6fd4c04dd659afd650e3ce6d192cd4da91f5724]: 250693
+    [[file:250693.png]]
+
+** 
+   [[file:the-end.jpg]]
+
+#+begin_center
+\faGithub{}  =http://github.com/rvf0068=
+#+end_center
 
 * COMMENT Local Variables
 

@@ -2,3 +2,5 @@
 *.tikz
 /comportamiento-pequeñas.pdf
 /comportamiento-pequeñas.tex
+auto/
+/test.org
