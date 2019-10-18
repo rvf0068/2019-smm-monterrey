@@ -878,7 +878,6 @@
      restantes, menos una, se obtienen de forma sencilla a partir de las
      tres triangulaciones de la esfera mencionadas anteriormente.
 
-
 ** 208409
 
    - La primera es la que en la lista de gráficas conexas de McKay
@@ -905,7 +904,6 @@
      #+RESULTS[8c2b0eaeab7593c0c3f71192f96c1f510f57d64e]: 208409
      [[file:208409.png]]
   
-
 ** 248687
 
    La otra triangulación de la esfera se puede obtener identificando
@@ -956,8 +954,6 @@ i  \EdgeFromOneToAll{a}{b}{3}{4}
    #+attr_latex: :float t :width ""
    #+RESULTS[6c0ebda9f4b016a3ef86ee3d14c7aa9db50b64d1]: 242316
    [[file:242316.png]]
-
-
 
 ** 248936
 
@@ -1114,8 +1110,6 @@ i  \EdgeFromOneToAll{a}{b}{3}{4}
    #+RESULTS[d691e3ff13167cba4ede8796560cc8df8d371d11]: 251628
    [[file:251628.png]]
 
-
-   
 ** 251759
 
    9, 13, 21, 43, 403.
@@ -1142,7 +1136,6 @@ i  \EdgeFromOneToAll{a}{b}{3}{4}
    #+attr_latex: :float t :width ""
    #+RESULTS[b3d5055ea53b2befc839b19ca7c5e1cfcb53748b]: 251759
    [[file:251759.png]]
-
 
 ** 251902
 
@@ -1171,7 +1164,6 @@ i  \EdgeFromOneToAll{a}{b}{3}{4}
    #+attr_latex: :float t :width ""
    #+RESULTS[e9f205310c171b9ba65955d134d62ddbc10ff87d]: 251902
    [[file:251902.png]]
-
 
 ** 252075
 
@@ -1286,6 +1278,34 @@ i  \EdgeFromOneToAll{a}{b}{3}{4}
    #+attr_latex: :float t :width ""
    #+RESULTS[b23ef751f640ebf8967ca2dcc6daaf15a335924d]: 254369
    [[file:254369.png]]
+
+** 255141
+
+   9, 16, 23, 70, 849.
+
+   #+name: 255141
+   #+header: :file (by-backend (latex "255141.tikz") (beamer "255141.tikz") (t "255141.png"))
+   #+begin_src latex
+\bigskip
+\begin{tikzpicture}
+  \grWheel[RA=2, prefix=a]{7}
+  \grCycle[x=5, RA=2, prefix=b]{6}
+  \grPath[x=5, RA=1.3333, form=2, rotation=90, prefix=c]{2}
+  \EdgeFromOneToSel{c}{b}{0}{0,3,4,5}
+  \EdgeFromOneToSel{c}{b}{1}{0,1,2,3}
+  \tikzstyle{EdgeStyle}=[color=red, line width=0.5pt, double=red, double distance=1pt]
+  \Edge[style={bend left}](a1)(a4)
+  \Edge[style={bend left}](b1)(b4)
+  \Edge[style={bend right}](a2)(a5)
+  \Edge[style={bend right}](b2)(b5)
+\end{tikzpicture}
+
+   #+end_src
+
+   #+attr_html: :width 400 :alt 255141 :align center
+   #+attr_latex: :float t :width ""
+   #+RESULTS[5d13daa74c5e363d9aaa678e59b4239b240de8aa]: 255141
+   [[file:255141.png]]
 
 ** 260040
 
@@ -1431,12 +1451,39 @@ i  \EdgeFromOneToAll{a}{b}{3}{4}
     #+RESULTS[d6fd4c04dd659afd650e3ce6d192cd4da91f5724]: 250693
     [[file:250693.png]]
 
+** Tabla resumen
+
+#+begin_scriptsize
+| Índice | S  | g | kg | k2g | k3g |  k4g |
+|--------+----+---+----+-----+-----+------|
+|  chato | sí | 8 | 12 |  20 |  56 | 1076 |
+| 208409 | sí | 9 | 14 |  23 |  46 |  202 |
+| 242316 | no | 9 | 14 |  21 |  60 | 1180 |
+| 248687 | sí | 9 | 14 |  23 |  56 |  452 |
+| 248936 | no | 9 | 13 |  19 |  37 |  182 |
+| 249436 | no | 9 | 15 |  23 |  52 |  353 |
+| 249574 | no | 9 | 12 |  17 |  36 |  306 |
+| 249576 | no | 9 | 13 |  22 |  53 |  685 |
+| 250693 | no | 9 | 13 |  19 |  41 |  241 |
+| 250814 | no | 9 | 12 |  18 |  38 |  222 |
+| 251628 | no | 9 | 13 |  20 |  55 | 1034 |
+| 251759 | no | 9 | 13 |  21 |  43 |  403 |
+| 251902 | no | 9 | 12 |  18 |  41 |  461 |
+| 252075 | no | 9 | 13 |  20 |  55 | 1076 |
+| 253650 | no | 9 | 14 |  19 |  40 |  259 |
+| 254369 | no | 9 | 13 |  17 |  40 |  394 |
+| 255141 | no | 9 | 16 |  23 |  70 |  849 |
+| 260040 | no | 9 | 13 |  21 |  58 | 1227 |
+| 260910 | no | 9 | 12 |  21 | 132 |    ? |
+#+end_scriptsize
+
 ** 
    [[file:the-end.jpg]]
 
 #+begin_center
 \faGithub{}  =http://github.com/rvf0068=
 #+end_center
+
 
 * COMMENT Local Variables
 
